@@ -329,7 +329,7 @@ export class MappingsComponent implements OnInit, OnDestroy, WebSocketListener {
 
   editViaKeyboard($event, activeItem) {
     if (activeItem != null && (!activeItem.isProxy() || activeItem.isProxyEnabled())) {
-      if(this.editMode === State.NORMAL) {
+      if (this.editMode === State.NORMAL) {
         this.editMapping(activeItem);
       }
     }
@@ -339,7 +339,7 @@ export class MappingsComponent implements OnInit, OnDestroy, WebSocketListener {
   }
 
   abortViaKeyboard($event) {
-    if(this.editMode === State.EDIT || this.editMode === State.NEW){
+    if (this.editMode === State.EDIT || this.editMode === State.NEW) {
       this.editMode = State.NORMAL;
     }
 
@@ -349,9 +349,9 @@ export class MappingsComponent implements OnInit, OnDestroy, WebSocketListener {
 
   saveViaKeyboard($event, activeItem) {
     if (activeItem != null) {
-      if(this.editMode === State.NEW){
+      if (this.editMode === State.NEW) {
         this.saveNewMapping();
-      }  else if(this.editMode === State.EDIT){
+      }  else if (this.editMode === State.EDIT) {
         this.saveEditMapping(activeItem);
       }
     }

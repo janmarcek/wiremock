@@ -1,12 +1,15 @@
-<ngb-tabset #tabSet="ngbTabset" class="wmTabs wmHolyGrailBody column">
-  <ngb-tab id="tab-raw" title="Raw" [disabled]="rawDisabled">
-    <ng-template ngbTabContent>
+<ul ngbNav #nav="ngbNav" class="nav-tabs" [animation]="false">
+  <li ngbNavItem="tab-raw" id="tab-raw" title="Raw" [disabled]="rawDisabled">
+    <a ngbNavLink>Raw</a>
+    <ng-template ngbNavContent>
       <ng-content select="wm-raw-separated-raw"></ng-content>
     </ng-template>
-  </ngb-tab>
-  <ngb-tab id="tab-separated" title="Separated" [disabled]="separatedDisabled">
-    <ng-template ngbTabContent>
+  </li>
+  <li ngbNavItem="tab-separated" id="tab-separated" title="Separated" [disabled]="separatedDisabled">
+    <a ngbNavLink>Separated</a>
+    <ng-template ngbNavContent>
       <ng-content select="wm-raw-separated-separated"></ng-content>
     </ng-template>
-  </ngb-tab>
-</ngb-tabset>
+  </li>
+</ul>
+<div [ngbNavOutlet]="nav" class="wmHolyGrailBody wmTabs"></div>

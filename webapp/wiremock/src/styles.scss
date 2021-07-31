@@ -69,7 +69,7 @@ body {
   flex-direction: column;
 }
 
-.wmHolyGrailBody, .wmTabs > .tab-content, .wmTabs > .tab-content > .tab-pane {
+.wmHolyGrailBody, .wmTabs > .tab-content, .wmTabs > .tab-content > .tab-pane, .wmTabs > .tab-pane {
   display: flex;
   flex: 1;
   &.column {

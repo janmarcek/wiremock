@@ -8,10 +8,9 @@ import {LoggedRequest} from '../../model/wiremock/logged-request';
 import {debounceTime, filter, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs/internal/Subject';
 import {CurlExtractor} from '../../services/curl-extractor';
-import {AutoRefreshService} from "../../services/auto-refresh.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {StateMappingInfoComponent} from "../state-mapping-info/state-mapping-info.component";
-import {CurlPreviewComponent} from "../curl-preview/curl-preview.component";
+import {AutoRefreshService} from '../../services/auto-refresh.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {CurlPreviewComponent} from '../curl-preview/curl-preview.component';
 
 @Component({
   selector: 'wm-unmatched',
@@ -77,7 +76,7 @@ export class UnmatchedComponent implements OnInit, OnDestroy {
   }
 
   editCurl(request: LoggedRequest) {
-    let curl = CurlExtractor.extractCurl(request);
+    const curl = CurlExtractor.extractCurl(request);
     const modalRef = this.modalService.open(CurlPreviewComponent, {
       size: 'lg',
       windowClass: 'modal-h70'

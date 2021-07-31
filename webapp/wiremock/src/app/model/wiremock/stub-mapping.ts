@@ -55,7 +55,8 @@ export class StubMapping extends Proxy implements Item {
     this.metadata = unchecked.metadata;
     this.postServeActions = unchecked.postServeActions;
 
-    if (UtilService.isDefined(proxyConfig) && (UtilService.isDefined(this.response.proxyBaseUrl) || proxyConfig.proxyConfig.has(this.uuid))) {
+    if (UtilService.isDefined(proxyConfig) && (UtilService.isDefined(this.response.proxyBaseUrl) ||
+      proxyConfig.proxyConfig.has(this.uuid))) {
       this.setProxy(true);
       this.setProxyEnabled(!proxyConfig.proxyConfig.has(this.uuid));
     }
