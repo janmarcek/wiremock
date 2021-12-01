@@ -15,7 +15,15 @@
  */
 package com.github.tomakehurst.wiremock.jetty9;
 
-import com.github.tomakehurst.wiremock.common.*;
+import static com.github.tomakehurst.wiremock.common.Exceptions.throwUnchecked;
+import static com.github.tomakehurst.wiremock.core.WireMockApp.ADMIN_CONTEXT_ROOT;
+import static java.util.concurrent.Executors.newScheduledThreadPool;
+
+import com.github.tomakehurst.wiremock.common.AsynchronousResponseSettings;
+import com.github.tomakehurst.wiremock.common.FileSource;
+import com.github.tomakehurst.wiremock.common.HttpsSettings;
+import com.github.tomakehurst.wiremock.common.JettySettings;
+import com.github.tomakehurst.wiremock.common.Notifier;
 import com.github.tomakehurst.wiremock.core.Options;
 import com.github.tomakehurst.wiremock.core.WireMockApp;
 import com.github.tomakehurst.wiremock.http.AdminRequestHandler;
@@ -44,7 +52,9 @@ import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.h2.jdbcx.JdbcDataSource;
 
+import javax.naming.NamingException;
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -126,6 +136,22 @@ public class JettyHttpServer implements HttpServer {
                 adminRequestHandler,
                 notifier
         );
+
+        final ServletContextHandler accountServiceContext = new ServletContextHandler(this.jettyServer, "/account");
+        accountServiceContext.addServlet(AccountDefaultServlet.class, "/");
+
+        org.eclipse.jetty.webapp.Configuration.ClassList classlist = org.eclipse.jetty.webapp.Configuration.ClassList.setServerDefault(this.jettyServer);
+        classlist.addAfter("org.eclipse.jetty.webapp.FragmentConfiguration", "org.eclipse.jetty.plus.webapp.EnvConfiguration", "org.eclipse.jetty.plus.webapp.PlusConfiguration");
+
+        JdbcDataSource dataSource = new JdbcDataSource();
+        dataSource.setUrl("jdbc:h2:mem:mydb");
+        dataSource.setUser("sa");
+        try {
+            new org.eclipse.jetty.plus.jndi.Resource("comp/env/jdbc/dc", dataSource);
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+
         final ServletContextHandler mockServiceContext = this.addMockServiceContext(
                 stubRequestHandler,
                 options.filesRoot(),
@@ -136,7 +162,7 @@ public class JettyHttpServer implements HttpServer {
         );
 
         final HandlerCollection handlers = new HandlerCollection();
-        handlers.setHandlers(ArrayUtils.addAll(this.extensionHandlers(), adminContext));
+        handlers.setHandlers(ArrayUtils.addAll(this.extensionHandlers(), accountServiceContext, adminContext));
 
         if (options.getGzipDisabled()) {
             handlers.addHandler(mockServiceContext);
